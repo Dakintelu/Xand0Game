@@ -121,6 +121,7 @@ public class XandOExample {
         scoreLabel.setForeground(Color.DARK_GRAY);
         xand0.add(scoreLabel, BorderLayout.NORTH);
 
+        gridPanel.removeAll();
         gridPanel.setBackground(Color.BLACK);
         for (int i = 0; i < 9; i++) {
             buttons[i] = new JButton();
@@ -183,52 +184,75 @@ public class XandOExample {
                     playerOneMoves.contains(condition[1]) &&
                     playerOneMoves.contains(condition[2])) {
                 playerOneScore++;
-                showResult(playerOneName);
+                showResultScreen(playerOneName + " Wins!");
                 return;
             } else if (playerTwoMoves.contains(condition[0]) &&
                     playerTwoMoves.contains(condition[1]) &&
                     playerTwoMoves.contains(condition[2])) {
                 playerTwoScore++;
-                showResult(playerTwoName);
+                showResultScreen(playerTwoName + " Wins!");
                 return;
             }
         }
 
         if (playerOneMoves.size() + playerTwoMoves.size() == 9) {
-            showResult("No one");
+            showResultScreen("It's a Draw!");
         }
     }
 
-    void showResult(String winnerName) {
-        String message = winnerName.equals("No one") ? "It's a draw!" : winnerName + " wins!";
-        JOptionPane.showMessageDialog(xand0, message, "Game Over", JOptionPane.INFORMATION_MESSAGE);
+    void showResultScreen(String message) {
+        xand0.getContentPane().removeAll();
+        xand0.repaint();
+
+        JPanel resultPanel = new JPanel(new BorderLayout());
+        resultPanel.setBackground(new Color(30, 30, 60));
+
+        JLabel resultLabel = new JLabel(message, SwingConstants.CENTER);
+        resultLabel.setFont(new Font("Verdana", Font.BOLD, 60));
+        resultLabel.setForeground(Color.ORANGE);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(new Color(30, 30, 60));
+
+        JButton replayBtn = new JButton("Play Again");
+        replayBtn.setFont(new Font("Arial", Font.BOLD, 28));
+        replayBtn.setBackground(new Color(0, 180, 0));
+        replayBtn.setForeground(Color.WHITE);
+
+        JButton quitBtn = new JButton("Quit");
+        quitBtn.setFont(new Font("Arial", Font.BOLD, 28));
+        quitBtn.setBackground(new Color(180, 0, 0));
+        quitBtn.setForeground(Color.WHITE);
+
+        replayBtn.addActionListener(e -> {
+            playerOneMoves.clear();
+            playerTwoMoves.clear();
+            flag = 0;
+            xand0.getContentPane().removeAll();
+            initGameWindow();
+        });
+
+        quitBtn.addActionListener(e -> System.exit(0));
+
+        buttonPanel.add(replayBtn);
+        buttonPanel.add(Box.createHorizontalStrut(40));
+        buttonPanel.add(quitBtn);
+
+        resultPanel.add(resultLabel, BorderLayout.CENTER);
+        resultPanel.add(buttonPanel, BorderLayout.SOUTH);
+
         updateScore();
-        int option = JOptionPane.showConfirmDialog(xand0, "Play again?", "Next Round", JOptionPane.YES_NO_OPTION);
-        if (option == JOptionPane.YES_OPTION) {
-            resetBoard();
-        } else {
-            xand0.dispose();
-        }
+        xand0.add(scoreLabel, BorderLayout.NORTH);
+        xand0.add(resultPanel, BorderLayout.CENTER);
+        xand0.revalidate();
+        xand0.repaint();
     }
 
     void updateScore() {
         scoreLabel.setText("Score - " + playerOneName + ": " + playerOneScore + " | " + playerTwoName + ": " + playerTwoScore);
     }
 
-    void resetBoard() {
-        for (JButton btn : buttons) {
-            btn.setText("");
-            btn.setEnabled(true);
-        }
-        playerOneMoves.clear();
-        playerTwoMoves.clear();
-        flag = 0;
-    }
-
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new XandOExample());
+        SwingUtilities.invokeLater(XandOExample::new);
     }
 }
-
-
-
