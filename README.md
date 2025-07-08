@@ -1,7 +1,7 @@
 # Xand0Game 
 We Created an X an 0 Game using JAVA that is Interactable.
 
-This is the welcome screen where player one and two enter thier names 
+This is the welcome screen where player one and two enter thier names. 
 ![Screenshot 9](https://github.com/user-attachments/assets/357a820e-b475-4c71-8d95-5658f73f6fd7)
 
 This is the game board
